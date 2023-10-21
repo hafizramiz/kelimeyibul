@@ -1,0 +1,39 @@
+package com.example.kelimeyibul.ui.theme
+
+import java.io.File
+
+fun main() {
+    val d: Deneme = Deneme()
+d.a?.   null degilse demek bu
+    d.a?.let {
+        // Burdan gectiyse null degil
+        if (it) {
+            println("${d.a}")
+        }
+    }
+
+    var b: Boolean = d.a?.let {
+
+    }: false
+
+}
+
+
+class Deneme {
+    var a: Boolean? = null
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -16,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -23,10 +25,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kelimeyibul.R
+import com.example.kelimeyibul.data.WordEntity
 import com.example.kelimeyibul.ui.theme.WordDetails
 import com.example.kelimeyibul.ui.theme.WordUiState
 import com.example.kelimeyibul.ui.theme.WordViewModel
 import com.example.kelimeyibul.ui.theme.components.WordAppBar
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,18 +40,21 @@ fun WordEntryScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     Scaffold(topBar = {
-//        WordAppBar(title = "Word Entry View", canNavigateBack = true)
-    }) {
-        println(it)
+        WordAppBar(title = "Word Entry View",
+            canNavigateBack = true,
+            )
+    }) { innerPadding->
+
         Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large)),
-            // modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             WordEntryForms(
                 wordUiState = myViewModel.wordUiState,
-//                onValueChange = myViewModel::updateUiState,
                 onValueChange = myViewModel::updateUiState,
-
                 enabled = myViewModel.wordUiState.isEntryValid
             )
             Button(
@@ -64,13 +71,10 @@ fun WordEntryScreen(
             ) {
                 Text(stringResource(R.string.save_action))
             }
-            Spacer(modifier = Modifier.height(10.dp))
-            HomeScreen("Android")
+            Spacer(modifier = Modifier.height(30.dp))
+            ShowAllWord(myViewModel = myViewModel)
         }
-        Modifier
-            .padding(it)
-            .verticalScroll(rememberScrollState())
-            .fillMaxWidth()
+
     }
 }
 
@@ -129,3 +133,21 @@ fun WordEntryForms(
         }
     }
 }
+
+
+@Composable
+fun ShowAllWord(myViewModel: WordViewModel) {
+    // Artik bu metotun getFullWords metotunun dindurdugu Flow nesnesini burda collect etcem.
+//    Buna state' i collect etmek deniyor.
+    val myFullWords = myViewModel.getFullWords().collectAsState(emptyList())
+    //
+
+    Column {
+        Text(
+            text = "Hello my Full Words: ${myFullWords.value}!",
+        )
+
+    }
+
+}
+

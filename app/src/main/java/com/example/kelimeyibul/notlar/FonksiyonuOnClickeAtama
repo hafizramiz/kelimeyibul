@@ -1,0 +1,45 @@
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    myViewModel: WordViewModel,
+    navigateToWordEntryScreen: () -> Unit,
+    // Bunu her bir kelimeye tiklaninca calistircam.
+    navigateToWordDetails: ()-> Unit,
+    deneme: ()->Unit
+
+) {
+    // Artik bu metotun getFullWords metotunun dindurdugu Flow nesnesini burda collect etcem.
+//    Buna state' i collect etmek deniyor.
+    val myFullWords by myViewModel.getFullWords().collectAsState(emptyList())
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    //
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            WordAppBar(title = "Home Screen", canNavigateBack = true)
+        },
+        floatingActionButton = {
+            MyFloatingActionButton(navigateToWordEntryScreen = navigateToWordEntryScreen)
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            // Burda fonksiyonu onClick'e verirken direk atamak gerekiyor.
+            ElevatedButton(onClick = deneme) {
+
+                Text(text = "deneme")
+            }
+            // Yani asagidaki gibi yapinca olmuyor.
+            ElevatedButton(onClick = { deneme }) {
+
+                Text(text = "deneme")
+            }
+
+            HomeBody(myFullWords = myFullWords, onItemClick = navigateToWordDetails)
+        }
+    }
+}

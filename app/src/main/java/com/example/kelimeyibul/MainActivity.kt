@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.kelimeyibul.ui.theme.KelimeyiBulTheme
+import com.example.kelimeyibul.ui.theme.features.HomeScreen
 import com.example.kelimeyibul.ui.theme.features.WordEntryScreen
 
 class MainActivity : ComponentActivity() {
@@ -24,8 +25,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // HomeScreen("Android")
-                    WordEntryScreen()
+                     //HomeScreen()
+                   // WordEntryScreen()
+                    WordApp()
                 }
             }
         }

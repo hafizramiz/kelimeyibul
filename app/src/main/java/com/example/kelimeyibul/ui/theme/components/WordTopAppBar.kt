@@ -7,6 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -20,7 +21,8 @@ fun WordAppBar(
     title: String,
     canNavigateBack:Boolean,
     modifier: Modifier=Modifier,
-    navigateFonc: ()->Unit
+    //navigateFonc: ()->Unit,
+//    scrollBehavior: TopAppBarScrollBehavior
 ){
 
     CenterAlignedTopAppBar(
@@ -28,7 +30,7 @@ fun WordAppBar(
         navigationIcon = {
             IconButton(onClick = {
                 // Burda geriye navigate yapcam
-                navigateFonc
+               // navigateFonc
             }) {
                 Icon(imageVector = Icons.Outlined.ArrowBack,
                 contentDescription = stringResource(R.string.back_icon)

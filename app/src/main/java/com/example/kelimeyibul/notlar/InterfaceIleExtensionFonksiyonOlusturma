@@ -1,0 +1,76 @@
+package com.example.kelimeyibul.ui.theme
+
+import java.io.File
+
+fun main() {
+   var q1: Quiz= Quiz(34,"Soru1")
+    println("Quiz sayisi: ${Quiz.quizSayisi}")
+    //var q2: Quiz= Quiz()
+   // println("Quiz sayisi: ${Quiz.quizSayisi}")
+    // Extension function cagirma. Ama nesne uzerinden cagirmadim. Cunku nesne uzerinde extension yazmadim.
+    // Statik alana extension yazdim. Burda baksana statik alana yazmisim
+//    fun Quiz.StudentProgress.progressGoruntule(){
+//        println("toplam ${Quiz.total} sorudan ${Quiz.answered}tanesi cevaplandi")
+//    }
+   Quiz.progressGoruntule()
+}
+
+
+
+
+class Quiz {
+    var question1: String = "Bos soru"
+
+  companion object StudentProgress {
+      var quizSayisi=0
+        var total: Int =10
+        var answered: Int = 3
+    }
+
+    constructor(a:Int, question:String){
+        quizSayisi+=1
+        total=a
+        question1=question
+    }
+}
+
+fun Quiz.StudentProgress.progressGoruntule(){
+    println("toplam ${Quiz.total} sorudan ${Quiz.answered}tanesi cevaplandi")
+}
+Peki Interface ile yazarsam nasil olur?
+Interface nedir?
+Bir contracttir Icinde siniflarin ve degiskenlerin imzasi olur.
+Bu interface'i implement eden her hangi bir sinif icindeki metotlari ve degiskenler yazmak zorundadir.
+Bu sayede emin olabiliriz ki bir interface'i implement'e eden butun siniflarda ilgili metottan var
+
+
+interface  ProgressPrintable{
+    // Deger veremiyoruz. Sadce tanimlari var ne yapacagini bilmez
+    val progressText: String
+   // fun progressGoruntule: String
+}
+
+class  Deneme: ProgressPrintable{
+    override val progressText: String
+        get() = TODO("Not yet implemented")
+}
+
+// Eger arayuzde bir degisiklige gidilirese orn metot ekle cikar ve ya degisken ekle cikar
+// Butun siniflarda bu degisikligin yapilmasi gerekir. Bu sayede tutarsizlik onlenir ve bilinir ki
+// Butun bu interface'i implement eden siniflarda bu var.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

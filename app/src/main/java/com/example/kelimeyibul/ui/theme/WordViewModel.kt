@@ -113,8 +113,9 @@ data class WordDetails(
 )
 
 // Worddetails'i arayuzden alcam onu WordEntity'e cevirecek extension fonksiyonu yazdim.
-fun WordDetails.toWordEntity(): WordEntity {
+fun WordDetails.toWordEntity( ): WordEntity {
     return WordEntity(id = id, word = word, meaning = meaning)
 }
+
 
 

@@ -1,1 +1,70 @@
 Once bir routes tanimlamalisin
+
+// Once bir enum tanimladim.
+enum class WordAppScreen() {
+    Home,
+    WordEntry
+}
+
+// Ikinci olarak bir NavHost composable tanimla
+// Scaffold her sayfada olsun. Top bar degisssin sadece
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WordApp(
+// Ilk Once NavhostController tipinde bir nesne uret ve onu navController'a ver.
+    navController: NavHostController = rememberNavController()
+) {
+    NavHost(navController = navController, startDestination = WordAppScreen.Home.name) {
+        composable(route = WordAppScreen.Home.name) {
+//               HomeScreen()
+            Deneme(
+                onClick = {
+                    navController.navigate(WordAppScreen.WordEntry.name)
+                }
+            )
+        }
+        composable(route = WordAppScreen.WordEntry.name) {
+            Deneme1(onClick = {
+// Geri gelmek icin
+                navController.popBackStack()
+            })
+            // WordEntryScreen()
+        }
+    }
+}
+
+
+@Composable
+fun Deneme(
+    onClick: () -> Unit
+) {
+    Column {
+        Text(text = "Deneme")
+        ElevatedButton(onClick = onClick) {
+            Text(text = "Navigate antother screen")
+        }
+    }
+}
+
+@Composable
+fun Deneme1(
+    onClick: () -> Unit
+) {
+    Column {
+        Text(text = "Deneme1")
+        ElevatedButton(onClick = onClick) {
+            Text(text = "Navigate back screen")
+        }
+    }
+}
+
+
+
+navController.navigate(route="")   Buraya route ismini veriyoruz.
+Ornegin boyle olcak
+navController.navigate(route= WordAppScreen.WordEntry.name)
+
+
+
