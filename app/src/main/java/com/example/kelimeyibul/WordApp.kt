@@ -14,15 +14,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.kelimeyibul.ui.theme.WordViewModel
 import com.example.kelimeyibul.ui.theme.components.WordAppBar
 import com.example.kelimeyibul.ui.theme.features.HomeScreen
+import com.example.kelimeyibul.ui.theme.features.WordDetailsDestination
 import com.example.kelimeyibul.ui.theme.features.WordDetailsScreen
+import com.example.kelimeyibul.ui.theme.features.WordDetailsViewModel
 import com.example.kelimeyibul.ui.theme.features.WordEntryScreen
+
 // Navigation'i burda yonetiyorum.
 
 
@@ -39,6 +44,8 @@ enum class WordAppScreen() {
 fun WordApp(
     navController: NavHostController = rememberNavController(),
     myViewModel: WordViewModel = viewModel(factory = WordViewModel.myFactory),
+   wordDetailsViewModel: WordDetailsViewModel = viewModel(factory = WordDetailsViewModel.myFactory)
+
 ) {
 
     NavHost(navController = navController, startDestination = WordAppScreen.Home.name) {
@@ -48,16 +55,20 @@ fun WordApp(
                 navigateToWordEntryScreen = {
                     // Burda navigate yapcam.Route'in ismini veriyorum. Burda yeni word girmesi icin sayfaya yonlendirdim.
                     // Bu da floating action button'da calisiyor.
-                    navController.navigate(route= WordAppScreen.WordEntry.name)
+                    navController.navigate(route = WordAppScreen.WordEntry.name)
                     // Peki bu ekrandan digerine giderken parametre gecmek istersem ne olcak?
 //                    Yani diyelim ki kelimler var. Her bir item'a tiklaninca o item ile ilgili bilgiyi diger ekrana
                     // transfer etmek istersem. Bunu nasil yapcam. Bunu da asagidaki fonksiyonda yapcam.
                 },
                 navigateToWordDetails = {
+                    println(it)
                     // Simdi burda lazy column icindeki her bir elemana tiklaninca gidecegi yeri yonetcem
                     // Burdan baska sayfaya atinca benim parametre de gondermem gerekiyor. Orn id bilgisini
-                    // Bunun icin id'yi diger sayfaya atcam
-                    navController.navigate(route=WordAppScreen.WordDetails.name)
+                    // Bunun icin id'yi diger sayfaya atcam. Burdaki it id oluyor. Cunku callback fonksiyonuna
+                    // ordan Int deger olarak verdim.
+                    navController.navigate(
+                        "${WordDetailsDestination.route}/${it}"
+                    )
                 },
             )
             println("Home screen")
@@ -66,10 +77,18 @@ fun WordApp(
             WordEntryScreen(myViewModel = myViewModel)
             println("Home screen")
         }
-        composable(route = WordAppScreen.WordDetails.name) {
+//        composable(route = WordAppScreen.WordDetails.name) {
+//            WordDetailsScreen()
+//        }
+
+        composable(route = WordDetailsDestination.routeWithArgs,
+            arguments = listOf(navArgument(WordDetailsDestination.wordIdArg){
+                type= NavType.IntType
+            })
+        ) {
             // Hangisine tikladiysa onun id si gerekli ki degisiklik yapabilsin.
             // Bu sayfaya giderken benden id bekliyor.
-            WordDetailsScreen()
+            WordDetailsScreen(wordDetailsViewModel=wordDetailsViewModel)
         }
     }
 }

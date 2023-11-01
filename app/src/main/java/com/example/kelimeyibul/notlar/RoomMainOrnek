@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
 // Dao sinifini olustur
 // Database'i baslatacak sinifi olustur.
 // Application'dan inherit alan sinifi olustur.
-// Manifest dosyasini guncelle
+// Manifest dosyasini guncelle  // App'in baslangic noktasini degistirmek icin
 // View modeli ve factory metotunu olustur.
 
 

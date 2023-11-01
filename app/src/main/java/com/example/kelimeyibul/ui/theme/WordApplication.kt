@@ -11,5 +11,8 @@ class WordApplication : Application() {
 
     val database: WordDatabase by lazy {
         WordDatabase.getDatabase(this)
+        // Burda getDatabase sinifi WordDatabase turunde bir nesne donduruyor. Bunu da companion object icinde yazdik ya
+        // orda iste bir instance olusturup dondurecek. companion object neydi siniflar icinde singleton obje
+        // dondurmek icin kullaniliyordu
     }
 }

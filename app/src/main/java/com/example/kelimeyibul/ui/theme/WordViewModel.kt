@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.room.ColumnInfo
 import com.example.kelimeyibul.data.WordDao
 import com.example.kelimeyibul.data.WordEntity
+import com.example.kelimeyibul.ui.theme.features.WordDetailsDestination
 import kotlinx.coroutines.flow.Flow
 
 //ViewModel'in oluşturulduğunda constructor'a parametere vermeye izin vermedigi icin
@@ -44,10 +45,12 @@ import kotlinx.coroutines.flow.Flow
 //Dependencies varsa ViewModelProvider.Factory kullaniriz. Depedencies yoksa buna gerek kalmaz
 //Dependecny den kasit parametreye ihtiyca varsa
 
-
+// WordViewModel'den bir nesne uretilirse benden parametre istiyecek. Cunku primary consturctorda
+// bir degisken var. Bu ne demek oluyor. Ilgili degisken bir reqired parametredir.
+// private val wordDao: WordDao
 class WordViewModel(private val wordDao: WordDao) : ViewModel() {
+    // Bu projede repositry katmani olusturmadigim icin
 // Daoyu buraya parametere olarak gectim
-
     var wordUiState by mutableStateOf(WordUiState())
         private set
 
@@ -91,12 +94,13 @@ class WordViewModel(private val wordDao: WordDao) : ViewModel() {
                 // bu blok icinde View modelden yeni nesne uretcem.
                 val application =
                     (this[APPLICATION_KEY] as WordApplication)
-
                 WordViewModel(application.database.wordDao())
             }
         }
 
         // SImdi myFactory isimli degisken yaridimyla view model'i UI tarafinda baslatcam.
+        // Ui tarafinda myFactory isimli degiskeni cagircam.
+        // Bu sekilde cagircam:  myViewModel: WordViewModel = viewModel(factory = WordViewModel.myFactory)
     }
 }
 

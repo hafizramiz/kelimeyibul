@@ -1,0 +1,114 @@
+Room Dependency ekle
+
+    // Burdaki dependencieslari eklemelesiini yukariya sunu eklemelisin
+//    id("com.google.devtools.ksp")
+//    Birde top level buildgradle da da bir satir eklemelisin.
+//    Bu satiri:
+//    id("com.google.devtools.ksp") version "1.8.10-1.0.9" apply false
+
+    val room_version = "2.5.2"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+
+
+Ayni gradle icinde bunu da ekle en ust tarafta
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+}
+
+Sonra Entity olustur.
+Dao Olustur.
+Database'i baslatacak sinifi olustur.
+View Model olustur.
+
+Ornek view Model : View model icine factory olustur.
+package com.example.busscheduleapp.ui
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.busscheduleapp.BusScheduleApplication
+import com.example.busscheduleapp.data.BusSchedule
+import com.example.busscheduleapp.data.BusScheduleDao
+import kotlinx.coroutines.flow.Flow
+
+
+// Eger view model parametre aliyorsa o zaman ViewModelProvider.Factory'i yeniden yazmamiz gerekiyor.
+//
+//class DenemeViewModel(denemeVar: Int):ViewModel(){
+//    // Burda parametre aliyor. Bunu UI tarafinda cagirmak icin
+//    viewModel: DenemeViewModel = viewModel(factory = DenemeViewModel.factory)
+//    // Bu sekilde cagirabilirim. Bu yazim seklinde DenemeViewModel constructoru cagirmadim. Cunku otomatik
+//    // primary constructoru tetikliyecek. Ama
+////    View modelim parametre alsaydi yeniden factory yazmam gerekiyordu
+//    // Eger parametre alsa bunun icin companion object icinde bir ViewModelProvider.Factory yazmam gerekiyor.
+//    // Peki nedir bu ViewModelProvider.Factory?
+//    // View modeli baslatmak icin gerekli olan interface'dir
+//
+//
+//}
+
+
+class BusScheduleViewModel(private val busScheduleDao: BusScheduleDao): ViewModel() {
+    // Get full bus schedule from Room DB
+    fun getFullSchedule(): Flow<List<BusSchedule>> = busScheduleDao.getAll()
+    // Get bus schedule based on the stop name from Room DB
+    fun getScheduleFor(stopName: String): Flow<List<BusSchedule>> =
+        busScheduleDao.getByStopName(stopName)
+
+    // UI tarafinda parametre almis bir ViewModel cagirirken boyle cagiriyorum.
+//    viewModel: BusScheduleViewModel = viewModel(factory = BusScheduleViewModel.factoryDeneme)
+    // Companion object icindeki alanlar statik alanlardir. SinifIsmi.varIsmi seklinde cagirabilirim
+    // icindeki initializer bir tane yeni BusScheduleViewModel() dondurur icinde de parametresi olur bunun
+    // Artik UI tarafinda buna parametre vermek zorunda kalmayiz. Biz bu factoryDeneme isimli degiskeni
+    // cagirirsak o zaten BusScheduleViewModel tipinde bir nesne dondurmus olcak.
+    companion object {
+        val factoryDeneme : ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as BusScheduleApplication)
+                println("application nesnesi olustu mu: $application")
+                BusScheduleViewModel(application.database.busScheduleDao()
+                )
+            }
+        }
+    }
+}
+
+//Dependencies varsa ViewModelProvider.Factory kullaniriz. Depedencies yoksa buna gerek kalmaz
+//Dependecny den kasit parametreye ihtiyca varsa
+
+
+Daha sonra  Application sinifini inherit alan sinifi olustur.
+
+
+
+class BusScheduleApplication : Application() {
+    // Burda lazy olmasinin sebebi database'e ihtiyac oldugunda olusturulacak olmasidir.
+    // Ihtiyac olmazsa ornegin herhengi sorgu atip veriyi ekranda gostermezsek
+    // db olusmuyor. Bunu test ettim.
+    val database: AppDatabase by lazy {
+        AppDatabase.getDatabase(this)
+    }
+}
+
+
+Bunu baslatmak icin AndroidManifest.xml icine bu satiri eklemen gerek
+  <application
+        android:name=".BusScheduleApplication"   // Bu satiri
+        android:allowBackup="true"
+
+
+
+
+
+
+
+

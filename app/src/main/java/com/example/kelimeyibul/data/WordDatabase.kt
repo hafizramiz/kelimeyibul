@@ -11,7 +11,7 @@ abstract class WordDatabase : RoomDatabase() {
     abstract fun wordDao(): WordDao
 
     companion object {
-        // Burda degisken tanimladim. Baslangic olarak ta null atadim.Null  olarak initializ ettim
+        // Burda degisken tanimladim. Baslangic olarak ta null atadim.Null  olarak initialize ettim
         @Volatile
         private var Instance: WordDatabase? = null
 
@@ -35,6 +35,16 @@ abstract class WordDatabase : RoomDatabase() {
 
     }
 
-
 }
 
+//Room Database kullanirken @Volatile annotation'nın neden kullanıldığını biliyor muydun? Ornek olarak göstermek gerekirse:
+//@Volatile
+//private var Instance: AppDatabase? = null
+//@Volatile anahtar kelimesi, bir değişkenin değerinin asla önbelleğe alınmadığını
+// (cached) ve tüm okuma ve yazmaların ana bellekten gerçekleştirildiğini belirtir. // Peki bu ne işimize yarar?
+//Instance değişkeninin değerinin her zaman güncel kalmasını ve tüm yürütme iş
+// parçacıkları için aynı olmasını sağlar. Bu, bir iş parçacığı tarafından yapılan değişikliklerin
+// Instance değişkenine hemen diğer tüm iş parçacıkları tarafından görülebilir olduğu anlamına gelir.
+// Eğer bir değişken Volatile olarak işaretlenirse, bir iş parçacığı tarafından yapılan bir değişiklik
+// derhal diğer iş parçacıkları tarafından görülebilir hale gelir, böylece değerlerin tutarsızlığından
+// kaynaklanan hatalar önlenmiş olur.
