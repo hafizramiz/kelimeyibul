@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -20,13 +21,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.example.kelimeyibul.data.WordEntity
 import com.example.kelimeyibul.ui.theme.WordViewModel
 import com.example.kelimeyibul.ui.theme.components.WordAppBar
 import com.example.kelimeyibul.ui.theme.features.HomeScreen
-import com.example.kelimeyibul.ui.theme.features.WordDetailsDestination
 import com.example.kelimeyibul.ui.theme.features.WordDetailsScreen
 import com.example.kelimeyibul.ui.theme.features.WordDetailsViewModel
 import com.example.kelimeyibul.ui.theme.features.WordEntryScreen
+
+import androidx.activity.compose.BackHandler
+import androidx.navigation.NavArgumentBuilder
 
 // Navigation'i burda yonetiyorum.
 
@@ -43,13 +47,21 @@ enum class WordAppScreen() {
 @Composable
 fun WordApp(
     navController: NavHostController = rememberNavController(),
+
+    // Iki view modeli de burda initialze ettim parametre olarak verdim
     myViewModel: WordViewModel = viewModel(factory = WordViewModel.myFactory),
-   wordDetailsViewModel: WordDetailsViewModel = viewModel(factory = WordDetailsViewModel.myFactory)
-
+    wordDetailsViewModel: WordDetailsViewModel = viewModel(factory = WordDetailsViewModel.myFactory)
 ) {
-
-    NavHost(navController = navController, startDestination = WordAppScreen.Home.name) {
+    val onBackHandler = {
+        navController.navigateUp()  // bu built in functiodir
+    }
+    NavHost(
+        navController = navController,
+        startDestination = WordAppScreen.Home.name
+    ) {
+        println("Nav host calisiyor.")
         composable(route = WordAppScreen.Home.name) {
+            println("Home screen'e gitti. Baslangic burasyidi")
             HomeScreen(
                 myViewModel = myViewModel,
                 navigateToWordEntryScreen = {
@@ -61,13 +73,14 @@ fun WordApp(
                     // transfer etmek istersem. Bunu nasil yapcam. Bunu da asagidaki fonksiyonda yapcam.
                 },
                 navigateToWordDetails = {
+                    // Burdaki call back bana tiklanan item'in idsini veriyor. Bunu ben diger sayfaya atcam.
                     println(it)
                     // Simdi burda lazy column icindeki her bir elemana tiklaninca gidecegi yeri yonetcem
                     // Burdan baska sayfaya atinca benim parametre de gondermem gerekiyor. Orn id bilgisini
                     // Bunun icin id'yi diger sayfaya atcam. Burdaki it id oluyor. Cunku callback fonksiyonuna
                     // ordan Int deger olarak verdim.
                     navController.navigate(
-                        "${WordDetailsDestination.route}/${it}"
+                        "${WordAppScreen.WordDetails.name}/${it}"
                     )
                 },
             )
@@ -77,18 +90,33 @@ fun WordApp(
             WordEntryScreen(myViewModel = myViewModel)
             println("Home screen")
         }
-//        composable(route = WordAppScreen.WordDetails.name) {
-//            WordDetailsScreen()
-//        }
 
-        composable(route = WordDetailsDestination.routeWithArgs,
-            arguments = listOf(navArgument(WordDetailsDestination.wordIdArg){
-                type= NavType.IntType
+        val wordArgument = "wordArgument"
+        composable(
+            route = WordAppScreen.WordDetails.name + "/{$wordArgument}",
+            arguments = listOf(navArgument("wordArgument") {
+                type = NavType.IntType
+                defaultValue=0
             })
-        ) {
+        ) { backStackEntry ->
+            val wordId = backStackEntry.arguments?.getInt(wordArgument)
+                ?: error(0)
             // Hangisine tikladiysa onun id si gerekli ki degisiklik yapabilsin.
             // Bu sayfaya giderken benden id bekliyor.
-            WordDetailsScreen(wordDetailsViewModel=wordDetailsViewModel)
+            // Burda ilgili id ye gore view modelden cekip de nesneyi gonderebilirim.
+            //val result by wordDetailsViewModel.getWordWithId(wordId).collectAsState(WordEntity(0,"0","0"))
+            println(" Details screen'e gitti.")
+
+            val clickedWordEntitiy by wordDetailsViewModel.getWordWithId(wordId)
+                .collectAsState(WordEntity(0, "", ""))
+            WordDetailsScreen(
+                clickedWordEntitiy,
+                wordId = wordId,
+                wordDetailsViewModel = wordDetailsViewModel,
+                onBack = {
+                    onBackHandler()
+                }
+            )
         }
     }
 }

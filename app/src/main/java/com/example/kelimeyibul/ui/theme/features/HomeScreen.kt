@@ -59,7 +59,7 @@ fun HomeScreen(
     navigateToWordDetails: (Int) -> Unit
 
 ) {
-    // Artik bu metotun getFullWords metotunun dindurdugu Flow nesnesini burda collect etcem.
+    // ArtikgetFullWords metotunun dindurdugu Flow nesnesini burda collect etcem.
 //    Buna state' i collect etmek deniyor.
     val myFullWords by myViewModel.getFullWords().collectAsState(emptyList())
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()

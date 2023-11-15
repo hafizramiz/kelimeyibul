@@ -1,6 +1,7 @@
 package com.example.kelimeyibul.ui.theme
 
 import androidx.annotation.NonNull
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,7 +13,6 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.room.ColumnInfo
 import com.example.kelimeyibul.data.WordDao
 import com.example.kelimeyibul.data.WordEntity
-import com.example.kelimeyibul.ui.theme.features.WordDetailsDestination
 import kotlinx.coroutines.flow.Flow
 
 //ViewModel'in oluşturulduğunda constructor'a parametere vermeye izin vermedigi icin
@@ -120,6 +120,3 @@ data class WordDetails(
 fun WordDetails.toWordEntity( ): WordEntity {
     return WordEntity(id = id, word = word, meaning = meaning)
 }
-
-
-

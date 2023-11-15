@@ -21,17 +21,14 @@ fun WordAppBar(
     title: String,
     canNavigateBack:Boolean,
     modifier: Modifier=Modifier,
-    //navigateFonc: ()->Unit,
-//    scrollBehavior: TopAppBarScrollBehavior
+    navigateUp: ()->Unit={},
 ){
 
     CenterAlignedTopAppBar(
         title = { Text(text = title)},
         navigationIcon = {
-            IconButton(onClick = {
-                // Burda geriye navigate yapcam
-               // navigateFonc
-            }) {
+            canNavigateBack==true
+            IconButton(onClick = navigateUp) {
                 Icon(imageVector = Icons.Outlined.ArrowBack,
                 contentDescription = stringResource(R.string.back_icon)
                 )
