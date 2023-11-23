@@ -46,7 +46,6 @@ fun WordDetailsScreen(
     clickedWordEntity: WordEntity?,
     wordDetailsViewModel: WordDetailsViewModel,
     onBack: () -> Unit,
-    wordId: Int
 ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -55,7 +54,9 @@ fun WordDetailsScreen(
             title = "Word Entry View",
             canNavigateBack = true,
             // Burasi beklesin
-            navigateUp = { onBack() }
+            navigateUp = { onBack()
+            println("back butona basildi")
+            }
         )
     }) { innerPadding ->
         Column(

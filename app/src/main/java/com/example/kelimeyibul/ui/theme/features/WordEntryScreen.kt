@@ -36,15 +36,16 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WordEntryScreen(
-    myViewModel: WordViewModel = viewModel(factory = WordViewModel.myFactory)
+    myViewModel: WordViewModel = viewModel(factory = WordViewModel.myFactory),
+    onBack:()->Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     Scaffold(topBar = {
         WordAppBar(title = "Word Entry View",
             canNavigateBack = true,
+            navigateUp = {onBack()}
             )
     }) { innerPadding->
-
         Column(
             modifier = Modifier
                 .padding(innerPadding)

@@ -87,7 +87,12 @@ fun WordApp(
             println("Home screen")
         }
         composable(route = WordAppScreen.WordEntry.name) {
-            WordEntryScreen(myViewModel = myViewModel)
+            WordEntryScreen(
+                myViewModel = myViewModel,
+                onBack = {
+                    navController.navigateUp()
+                }
+            )
             println("Home screen")
         }
 
@@ -111,7 +116,6 @@ fun WordApp(
                 .collectAsState(WordEntity(0, "", ""))
             WordDetailsScreen(
                 clickedWordEntitiy,
-                wordId = wordId,
                 wordDetailsViewModel = wordDetailsViewModel,
                 onBack = {
                     onBackHandler()

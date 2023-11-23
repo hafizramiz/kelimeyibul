@@ -28,7 +28,7 @@ fun WordAppBar(
         title = { Text(text = title)},
         navigationIcon = {
             canNavigateBack==true
-            IconButton(onClick = navigateUp) {
+            IconButton(onClick = {navigateUp()}) {
                 Icon(imageVector = Icons.Outlined.ArrowBack,
                 contentDescription = stringResource(R.string.back_icon)
                 )
